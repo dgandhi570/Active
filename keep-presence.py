@@ -32,17 +32,6 @@ def define_custom_seconds():
                     "It won't do anything if you are using your computer. "
                     "Useful to trick your machine to think you are still working with it.")
 
-    parser.add_argument(
-        "-s", "--seconds", type=int,
-        help="Define in seconds how long to wait after a user is considered idle. Default 300.")
-
-    parser.add_argument(
-        "-p", "--pixels", type=int,
-        help="Set how many pixels the mouse should move. Default 1.")
-
-    parser.add_argument(
-        "-c", "--circular", action='store_true',
-        help="Move mouse in a circle. Default move diagonally.")
 
     parser.add_argument(
         "-m", "--mode",
@@ -62,15 +51,6 @@ def define_custom_seconds():
     mode = args.mode
     random_seconds_interval = args.random
 
-    if args.seconds:
-        move_mouse_every_seconds = int(args.seconds)
-
-    if args.pixels:
-        PIXELS_TO_MOVE = int(args.pixels)
-
-    if args.circular:
-        MOUSE_DIRECTION_DELTA = 1
-
     if random_seconds_interval:
         RAND_INTERVAL_START = int(random_seconds_interval[0])
         RAND_INTERVAL_STOP = int(random_seconds_interval[1])
@@ -89,10 +69,6 @@ def define_custom_seconds():
         PRESS_SHIFT_KEY = True
         print(get_now_timestamp(), "Keyboard is enabled")
 
-    if is_mouse_enabled:
-        MOVE_MOUSE = True
-        print(get_now_timestamp(), "Mouse is enabled, moving", PIXELS_TO_MOVE, 'pixels',
-              '(circularly)' if MOUSE_DIRECTION_DELTA == 1 else '')
     if random_seconds_interval:
         RANDOM_MODE = True
         print(get_now_timestamp(), "Random timing is enabled.")
@@ -102,46 +78,29 @@ def define_custom_seconds():
     print('--------')
 
 
-def move_mouse_when_unable_to_move(expected_mouse_position):
-    if expected_mouse_position != mouse.position:
-        mouse.position = (PIXELS_TO_MOVE, PIXELS_TO_MOVE)
-
-
-def move_mouse():
-    global mouse_direction
-    delta_x = PIXELS_TO_MOVE if mouse_direction == 0 or mouse_direction == 3 else -PIXELS_TO_MOVE
-    delta_y = PIXELS_TO_MOVE if mouse_direction == 0 or mouse_direction == 1 else -PIXELS_TO_MOVE
-
-    new_x = currentPosition[0] + delta_x
-    new_y = currentPosition[1] + delta_y
-    mouse_direction = (mouse_direction + MOUSE_DIRECTION_DELTA) % 4
-
-    new_position = (new_x, new_y)
-    mouse.position = new_position
-
-    move_mouse_when_unable_to_move(new_position)
-
-    current_position = mouse.position
-
-    print(get_now_timestamp(), 'Moved mouse to: ', current_position)
-
-    return current_position
-
 
 def press_shift_key():
+
+    # pressing shift key
     keyboard.press(Key.shift)
     keyboard.release(Key.shift)
-    keyboard.press('a')
-    keyboard.release('a')
-    keyboard.press(Key.backspace)
-    keyboard.release(Key.backspace)
+
+    # For changing Tab
     keyboard.press(Key.ctrl_l)
     keyboard.press(Key.page_down)
     keyboard.release(Key.page_down)
     keyboard.release(Key.ctrl_l)
+
+    # Adding ctr+P
+    # keyboard.press(Key.ctrl_l)
+    # keyboard.press(Key.p)
+    # keyboard.release(Key.p)
+    # keyboard.release(Key.ctrl_l)
+
+    # pressing left-click
     pyautogui.leftClick()
     
-    print(get_now_timestamp(), 'Shift key pressed')
+    print(get_now_timestamp(), 'Mouse clicked, keys added')
 
 
 def get_now_timestamp():
@@ -152,10 +111,7 @@ def get_now_timestamp():
 def execute_keep_awake_action():
     print(get_now_timestamp(), 'Idle detection')
 
-
-
-    if PRESS_SHIFT_KEY:
-        press_shift_key()
+    press_shift_key()
 
 
 define_custom_seconds()
