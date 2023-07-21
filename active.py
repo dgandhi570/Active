@@ -12,14 +12,8 @@ mouse = MouseController()
 keyboard = KeyboardController()
 
 def press_keys():
-    keys = [Key.shift, Key.alt_l, Key.ctrl_l, Key.down, Key.end, Key.home, Key.left]  # list of keys
-    num_key_presses = random.randint(1, 30)  # choose a random number of key presses (between 1 and 7)
-
-    for _ in range(num_key_presses):
-        key_to_press = random.choice(keys)  # select random key from list
-        keyboard.press(key_to_press)
-        keyboard.release(key_to_press)
-        time.sleep(0.2)  # sleep for a while between key presses
+    keyboard.press(Key.shift)
+    keyboard.release(Key.shift)
 
     # For changing Tab
     keyboard.press(Key.ctrl_l)
@@ -27,15 +21,8 @@ def press_keys():
     keyboard.release(Key.page_down)
     keyboard.release(Key.ctrl_l)
 
-    num_clicks = random.randint(1, 30)  # choose a random number of mouse clicks (between 1 and 3)
-
-    for _ in range(num_clicks):
-        # pressing left-click at random position
-        x_rand = random.randint(0, pyautogui.size().width)
-        y_rand = random.randint(0, pyautogui.size().height)
-        pyautogui.leftClick(x_rand, y_rand)
-        time.sleep(0.2)  # sleep for a while between clicks
-
+    # pressing left-click
+    pyautogui.leftClick()
     print(get_now_timestamp(), 'Mouse clicked, keys added')
 
 def get_now_timestamp():
